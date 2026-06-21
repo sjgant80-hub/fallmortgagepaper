@@ -47,7 +47,7 @@ Regulatory clauses (MCOB, DISP, MCD, UK GDPR) are locked — marked with ◆ in 
 
 The Generate view has an "Extra Context" textarea where you enter key=value pairs for `{{ctx.*}}` placeholders — things like `dipRef`, `firstPaymentDate`, `revertRate`, `stressedMonthly`. These let you fill template-specific fields without modifying the template text.
 
-### Audit chain (Mansoor P3)
+### Audit chain (P3)
 
 Every document save/issue appends a SHA-256 chained audit entry. Verify chain integrity from the Audit tab. Export separately.
 
