@@ -188,22 +188,19 @@ td.r{text-align:right;font-family:var(--mono)}
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
-  };
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
-  };
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null },
-  };
+    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -270,8 +267,7 @@ td.r{text-align:right;font-family:var(--mono)}
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens,
-      });
+        max_tokens: maxTokens});
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -288,8 +284,7 @@ td.r{text-align:right;font-family:var(--mono)}
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -298,8 +293,7 @@ td.r{text-align:right;font-family:var(--mono)}
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -308,8 +302,7 @@ td.r{text-align:right;font-family:var(--mono)}
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
-      });
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -550,8 +543,7 @@ td.r{text-align:right;font-family:var(--mono)}
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE,
-  };
+    state: STATE};
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -611,8 +603,7 @@ const TABS=[
  {id:'templates',name:'Templates',ico:'✆'},
  {id:'firm', name:'Firm', ico:'¶'},
  {id:'audit', name:'Audit', ico:'◯'},
- {id:'help', name:'Q & A', ico:'?'},
-];
+ {id:'help', name:'Q & A', ico:'?'}];
 let state={
  active:'dashboard',
  brandName:'FallMortgagePaper',
@@ -634,14 +625,11 @@ let state={
  libFilterStatus:'',
  sectionOverrides:{},
  extraContext:{},
- chat:[],
- },
+ chat:[]},
  settings:{
  anthropicKey:'',
  auditChain:true,
- autoBroadcast:true,
- },
-};
+ autoBroadcast:true}};
 const $=(s,p=document)=>p.querySelector(s);
 const $$=(s,p=document)=>Array.from(p.querySelectorAll(s));
 const uid=(p='id')=>p+'_'+Math.random().toString(36).slice(2,11);
@@ -787,13 +775,13 @@ TEMPLATES_BUILTIN.push({
 {id:'fee-basis', heading:'3. What you will pay us', locked:true,
  body:'**Broker fee:** {{fees.brokerStatement}}\n**Payable:** {{fees.brokerWhen}}\n**Refund policy:** {{fees.refundPolicy}}\n\nWe will also typically receive a procuration fee from the lender on completion. The current range across the lenders on our panel is **0.30% to 0.55% of the loan amount**. The exact amount payable to us on your case will be confirmed in your suitability report and is in addition to any fee charged to you. Receipt of a procuration fee does not influence our recommendation — we are obliged by MCOB 4.7A.6 to recommend the most suitable product available to us irrespective of commission.'},
 {id:'no-obligation', heading:'4. You are under no obligation',
- body:'You are under no obligation to accept any recommendation we make. If you proceed with an application based on our advice, you may withdraw at any point up to legal exchange (purchase) or completion (remortgage) without further fee, save for any fee already incurred per section 3 above.'},
+ body:'You are under no obligation to accept any recommendation we make. If you proceed with an application based on our advice, you may withdraw at any point up to legal exchange (Access) or completion (remortgage) without further fee, save for any fee already incurred per section 3 above.'},
 {id:'conflicts', heading:'5. Conflicts of interest',
  body:'We are required by SYSC 10 to identify and manage conflicts of interest. We do not have material conflicts in respect of the lenders on our panel beyond the procuration fee disclosed above. Should a specific conflict arise in your case, it will be disclosed to you in writing before any recommendation.'},
 {id:'complaints', heading:'6. Complaints', locked:true,
- body:'If you wish to complain about any aspect of our service please write to the Complaints Officer at {{firm.name}}, {{firm.registeredAddress.line1}}, {{firm.registeredAddress.postcode}}, or email {{firm.complaintsEmail}}.\n\nWe will acknowledge your complaint in writing within **3 business days** (DISP 1.6.1R) and issue a final response within **8 weeks** (DISP 1.6.2R). If you are not satisfied with our final response, or we have not issued one within 8 weeks, you may refer the complaint to the **Financial Ombudsman Service** (Exchange Tower, London E14 9SR · 0800 023 4567 · www.financial-ombudsman.org.uk). The FOS is a free, impartial service.\n\nThe FOS award limit for complaints about acts/omissions on or after 1 April 2024 is **£430,000**.'},
+ body:'If you wish to complain about any aspect of our service please write to the Complaints Officer at {{firm.name}}, {{firm.registeredAddress.line1}}, {{firm.registeredAddress.postcode}}, or email {{firm.complaintsEmail}}.\n\nWe will acknowledge your complaint in writing within **3 business days** (DISP 1.6.1R) and issue a final response within **8 weeks** (DISP 1.6.2R). If you are not satisfied with our final response, or we have not issued one within 8 weeks, you may refer the complaint to the **Financial Ombudsman Service** (Exchange Tower, London E14 9SR · 0800 023 4567 · www.financial-ombudsman.org.uk). The FOS is a free, impartial service.\n\nThe FOS award limit for complaints about acts/omissions on or after 1 April 2024 is **TBA**.'},
 {id:'compensation', heading:'7. Compensation', locked:true,
- body:'We are covered by the **Financial Services Compensation Scheme** (FSCS). For advice on regulated mortgage contracts, compensation of up to **£85,000** per eligible claimant is available where we are unable to meet our obligations. Further information is at www.fscs.org.uk.'},
+ body:'We are covered by the **Financial Services Compensation Scheme** (FSCS). For advice on regulated mortgage contracts, compensation of up to **TBA** per eligible claimant is available where we are unable to meet our obligations. Further information is at www.fscs.org.uk.'},
 {id:'data', heading:'8. Data protection',
  body:'We process your personal data as a Data Controller under the UK GDPR and the Data Protection Act 2018, for the purposes of providing the advisory and arranging services described, complying with our regulatory obligations, and the prevention of money laundering. Records are retained for a minimum of **7 years** following the end of our engagement, in line with FCA SYSC and the FOS time-bar.'},
 {id:'ack', heading:'9. Client acknowledgement',
@@ -839,7 +827,7 @@ TEMPLATES_BUILTIN.push({
 {id:'amount-instalment', heading:'5. Amount of each instalment',
  body:'**£{{case.loan.monthlyPayment}} per month** for the initial period of {{case.product.period}} years at {{case.product.rate}}% ({{case.product.type}}).\n\nThereafter, payments will revert to the lender SVR (currently {{esis.revertRate}}%) giving an indicative monthly payment of **£{{esis.revertMonthlyPayment}}**. The reversion payment is illustrative only — the SVR can change at any time at the lender\'s discretion.\n\nYour income may need to be in a currency other than the loan currency to repay the loan — not applicable in this case (loan and income both GBP).'},
 {id:'amortisation', heading:'6. Illustrative amortisation table',
- body:'A full amortisation schedule is appended on request. Indicative balances:\n\n| Year | Balance start | Annual interest | Annual principal | Balance end |\n|---|---:|---:|---:|---:|\n| 1 | £{{esis.amort1.start}} | £{{esis.amort1.int}} | £{{esis.amort1.prin}} | £{{esis.amort1.end}} |\n| 5 | £{{esis.amort5.start}} | £{{esis.amort5.int}} | £{{esis.amort5.prin}} | £{{esis.amort5.end}} |\n| 10 | £{{esis.amort10.start}} | £{{esis.amort10.int}} | £{{esis.amort10.prin}} | £{{esis.amort10.end}} |\n| {{case.loan.term}} | £{{esis.amortEnd.start}} | £{{esis.amortEnd.int}} | £{{esis.amortEnd.prin}} | £0 |'},
+ body:'A full amortisation schedule is appended on request. Indicative balances:\n\n| Year | Balance start | Annual interest | Annual principal | Balance end |\n|---|---:|---:|---:|---:|\n| 1 | £{{esis.amort1.start}} | £{{esis.amort1.int}} | £{{esis.amort1.prin}} | £{{esis.amort1.end}} |\n| 5 | £{{esis.amort5.start}} | £{{esis.amort5.int}} | £{{esis.amort5.prin}} | £{{esis.amort5.end}} |\n| 10 | £{{esis.amort10.start}} | £{{esis.amort10.int}} | £{{esis.amort10.prin}} | £{{esis.amort10.end}} |\n| {{case.loan.term}} | £{{esis.amortEnd.start}} | £{{esis.amortEnd.int}} | £{{esis.amortEnd.prin}} | TBA |'},
 {id:'additional', heading:'7. Additional obligations',
  body:'The borrower must comply with the following obligations in order to benefit from the lending conditions described in this document:\n\n- Maintain buildings insurance on the property for at least the reinstatement value.\n- Use the property as the principal residence of at least one borrower (residential cases) or rent only on assured shorthold tenancy (BTL cases).\n- Notify the lender within 14 days of any material change to your circumstances including income, employment, or marital status.\n\nNot complying with these obligations may have severe consequences (for example: forced sale of the property).'},
 {id:'erc', heading:'8. Early repayment', locked:true,
@@ -1055,7 +1043,7 @@ function buildContext(clientId,caseId){
  'client.address.line1':ca.line1||c.address||'[Address]','client.address.city':ca.city||'[City]',
  'client.address.postcode':ca.postcode||'[Postcode]',
  'client.age':c.age||'[Age]','client.creditHistoryNotes':c.creditHistoryNotes||'Clean — no adverse.',
- 'case.ref':cs.ref||'[Case Ref]','case.type':cs.type||'purchase',
+ 'case.ref':cs.ref||'[Case Ref]','case.type':cs.type||'Access',
  'case.property.address':cs.property?.address||'[Property Address]',
  'case.property.postcode':cs.property?.postcode||'[Postcode]',
  'case.loan.amount':ln.amount||'[Amount]','case.loan.term':ln.term||'[Term]',
@@ -1080,8 +1068,7 @@ function buildContext(clientId,caseId){
  'esis.valuationFee':cs.esis?.valuationFee||'0',
  'recommendation.rationale':cs.recommendation?.rationale||'[Explain why this product is suitable]',
  'recommendation.alternativesConsidered':cs.recommendation?.alternativesConsidered||'[List alternatives considered and reasons for rejection]',
- 'today':d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}),
- };
+ 'today':d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})};
  for(const[k,v] of Object.entries(ctx)){flat['ctx.'+k]=v;}
  return flat;
 }
@@ -1128,7 +1115,7 @@ function renderPaperSection(sec,ctx,overrides){
 }
 
 function formatInline(s){
- return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[([^\]]+)\]/g,'<span class="placeholder-empty">$1</span>');
+ return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>TBA</strong>').replace(/\[([^\]]+)\]/g,'<span class="placeholder-empty">TBA</span>');
 }
 
 function renderFullPaper(tplId,ctx,overrides){
@@ -1153,8 +1140,7 @@ function newDocumentRec(tplId,clientId,caseId){
  tplId,clientId:clientId||'',caseId:caseId||'',
  status:'draft',title:'',sectionOverrides:{},
  createdAt:now(),updatedAt:now(),issuedAt:null,
- adviserId:state.ui.activeAdviserId||'',notes:'',hash:'',
- };
+ adviserId:state.ui.activeAdviserId||'',notes:'',hash:''};
 }
 async function saveDocumentRec(doc,action,reasoning){
  doc.updatedAt=now();
@@ -1532,13 +1518,12 @@ const T0_RULES=[
  {q:/dip|decision in principle/i,a:'A DIP (Decision in Principle / Agreement in Principle) is an informal indication from a lender that they would be willing to lend. It is not a binding offer. It may involve a soft or hard credit check depending on the lender. The DIP template confirms the outcome and next steps.'},
  {q:/fee|procuration|commission/i,a:'Broker fees must be disclosed before chargeable work commences (MCOB 4.4A.4R). Procuration fees from lenders must be disclosed in the suitability report (MCOB 4.7A.6R) and must not influence the recommendation. The Fee Agreement template formalises the engagement.'},
  {q:/stress|affordab/i,a:'Under MCOB 11.6.18R, lenders must stress-test affordability at a rate above the pay-rate. Brokers should assess affordability at the lender\'s stress rate and document the result in the suitability report. Include income, expenditure, DTI, and the stressed payment figure.'},
- {q:/complain|disp|ombudsman/i,a:'Under DISP 1.6.1R, acknowledge complaints within 3 business days. Issue a final response within 8 weeks (DISP 1.6.2R). If unresolved, advise the client of FOS referral rights within 6 months. FOS award limit is £430,000 for acts from April 2024. Use the Complaint/Final Response templates.'},
+ {q:/complain|disp|ombudsman/i,a:'Under DISP 1.6.1R, acknowledge complaints within 3 business days. Issue a final response within 8 weeks (DISP 1.6.2R). If unresolved, advise the client of FOS referral rights within 6 months. FOS award limit is TBA for acts from April 2024. Use the Complaint/Final Response templates.'},
  {q:/cooling|cancel|withdraw/i,a:'Under the MCD and MCOB, the borrower has a 7-day reflection period before the mortgage offer can be accepted (MCOB 6A.3.1R). For broker fee agreements, clients have 14 calendar days to cancel per the Consumer Contracts Regulations 2013. Cancellation rights are set out in the ESIS Section 14.'},
  {q:/product transfer|switch|svr/i,a:'A product transfer (switching to a new product with the same lender) is regulated advice under MCOB if the broker is involved. The broker must assess suitability per MCOB 4.7A.21R. Document why the transfer is suitable vs. remortgaging or reverting to SVR.'},
  {q:/redemption/i,a:'Request a redemption statement from the current lender when arranging a remortgage. It should show: outstanding balance, accrued interest, ERC if applicable, and any admin/deeds fees. Valid for typically 14-30 days. The Redemption Request template formalises this.'},
  {q:/retention|record/i,a:'FCA SYSC requires firms to retain records capable of being retrieved for at least 7 years from the end of the business relationship. Mortgage files should include: IDD, Fee Agreement, fact-find, research, suitability report, ESIS, application, offer, and all correspondence.'},
- {q:/vulnerab/i,a:'FCA FG21/1 requires firms to identify vulnerable customers and respond appropriately. In mortgage advice, consider: financial resilience (income stability, debt burden), health conditions affecting understanding, life events (bereavement, divorce), and capability (literacy, language). Document adjustments made.'},
-];
+ {q:/vulnerab/i,a:'FCA FG21/1 requires firms to identify vulnerable customers and respond appropriately. In mortgage advice, consider: financial resilience (income stability, debt burden), health conditions affecting understanding, life events (bereavement, divorce), and capability (literacy, language). Document adjustments made.'}];
 
 function askT0(q){for(const r of T0_RULES){if(r.q.test(q))return {answer:r.a,source:'T0 · MCOB/DISP hard-coded rules'};}return null;}
 
@@ -1551,8 +1536,7 @@ async function askT3(q){
  {k:state.settings.openaiKey,name:'OpenAI',url:'https://api.openai.com/v1/chat/completions',
  body:JSON.stringify({model:'gpt-4o-mini',max_tokens:800,messages:[{role:'system',content:'You are an expert UK mortgage regulation assistant.'},{role:'user',content:q}]}),
  headers:{'Authorization':'Bearer KEY','Content-Type':'application/json'},
- parse:r=>r.choices?.[0]?.message?.content},
- ];
+ parse:r=>r.choices?.[0]?.message?.content}];
  for(const p of keys){
  if(!p.k)continue;
  try{const hdrs={};for(const[hk,hv]of Object.entries(p.headers))hdrs[hk]=hv.replace('KEY',p.k);
@@ -1624,7 +1608,7 @@ function openModal(type){
  title.textContent='Add Case';
  body.innerHTML=`
  <div class="row"><div class="field"><label>Client</label><select id="acCl" style="width:100%"><option value="">—</option>${state.clients.filter(c=>!c.archivedAt).map(c=>`<option value="${c.id}">${esc((c.firstName||c.name||'')+' '+(c.lastName||''))}</option>`).join('')}</select></div><div class="field"><label>Reference</label><input id="acRef" style="width:100%" placeholder="MC-2026-001"></div></div>
- <div class="row"><div class="field"><label>Type</label><select id="acType" style="width:100%"><option value="purchase">Purchase</option><option value="remortgage">Remortgage</option><option value="product-transfer">Product Transfer</option><option value="buy-to-let">Buy to Let</option><option value="shared-ownership">Shared Ownership</option><option value="right-to-buy">Right to Buy</option></select></div><div class="field"><label>Property address</label><input id="acProp" style="width:100%"></div></div>
+ <div class="row"><div class="field"><label>Type</label><select id="acType" style="width:100%"><option value="Access">Access</option><option value="remortgage">Remortgage</option><option value="product-transfer">Product Transfer</option><option value="buy-to-let">Buy to Let</option><option value="shared-ownership">Shared Ownership</option><option value="right-to-buy">Right to Buy</option></select></div><div class="field"><label>Property address</label><input id="acProp" style="width:100%"></div></div>
  <div class="row"><div class="field"><label>Loan amount</label><input type="number" id="acLoan" style="width:100%"></div><div class="field"><label>Term (years)</label><input type="number" id="acTerm" value="25" style="width:100%"></div></div>
  <div class="row"><div class="field"><label>Lender</label><input id="acLender" style="width:100%"></div><div class="field"><label>Rate %</label><input type="number" step="0.01" id="acRate" style="width:100%"></div></div>
  <div class="actions"><button class="btn primary" onclick="saveNewCase()">Add</button> <button class="btn ghost" onclick="closeModal()">Cancel</button></div>`;
@@ -1655,8 +1639,7 @@ async function saveNewCase(){
  fees:{broker:'',brokerStatement:'',brokerWhen:'on application',refundPolicy:'Non-refundable after application submission.'},
  esis:{aprc:'',revertRate:'',productFee:'0',ercSummary:'',valuationFee:'0'},
  recommendation:{rationale:'',alternativesConsidered:''},
- procurationFee:'',
- };
+ procurationFee:''};
  state.cases.push(cs);await idbPut('cases',cs);
  await audit('case.created',{clientId:cs.clientId,reasoning:'manual add',payload:{caseId:cs.id}});
  closeModal();toast('Case added');render();
@@ -1710,14 +1693,14 @@ async function seedDemoIfEmpty(){
  const client={id:clId,title:'Mr',firstName:'James',lastName:'Patterson',name:'James Patterson',address:'42 Oak Road, Manchester M20 3AB',age:34,creditHistoryNotes:'Clean — no adverse. On electoral roll.',archivedAt:null,ts:now(),updatedAt:now(),isDemo:true};
  state.clients.push(client);await idbPut('clients',client);
  const csId=uid('mc');
- const mc={id:csId,clientId:clId,ts:now(),updatedAt:now(),ref:'MC-2026-001',type:'purchase',status:'dip-obtained',
+ const mc={id:csId,clientId:clId,ts:now(),updatedAt:now(),ref:'MC-2026-001',type:'Access',status:'dip-obtained',
  property:{address:'15 Elm Avenue, Manchester M21 9QR',postcode:'M21 9QR'},
  loan:{amount:280000,term:30,repayment:'capital & interest',ltv:85,monthlyPayment:1247,productCode:'NW-FIX-2Y-85'},
  product:{lender:'Nationwide',type:'fixed',rate:4.29,period:2},
  affordability:{dependants:0,expenditure:1800,dti:32,stressRate:7.5},
- fees:{broker:499,brokerStatement:'A fixed fee of £499, payable on full application submission.',brokerWhen:'on full application submission',refundPolicy:'Non-refundable after application submission. No fee payable if application is not submitted.'},
+ fees:{broker:499,brokerStatement:'A fixed fee of TBA, payable on full application submission.',brokerWhen:'on full application submission',refundPolicy:'Non-refundable after application submission. No fee payable if application is not submitted.'},
  esis:{aprc:6.1,revertRate:7.99,productFee:999,ercSummary:'2% year 1, 1% year 2',valuationFee:0},
- recommendation:{rationale:'Nationwide 2-year fixed at 4.29% offers the best combination of rate, fee, and ERC exposure for Mr Patterson\'s 30-year purchase. The £0 valuation fee and free legals (remortgage equivalent) offset the £999 product fee.',alternativesConsidered:'Barclays 2-yr fixed 4.19% (lower rate but £1,499 product fee, net cost higher over 2 years). HSBC 5-yr fixed 4.59% (more payment certainty but higher rate and 5-year ERC tie-in, which Mr Patterson prefers to avoid given potential relocation in 3 years). Halifax tracker (lower initial rate but payment uncertainty incompatible with stated need for budgeting certainty).'},
+ recommendation:{rationale:'Nationwide 2-year fixed at 4.29% offers the best combination of rate, fee, and ERC exposure for Mr Patterson\'s 30-year Access. The TBA valuation fee and free legals (remortgage equivalent) offset the TBA product fee.',alternativesConsidered:'Barclays 2-yr fixed 4.19% (lower rate but TBA product fee, net cost higher over 2 years). HSBC 5-yr fixed 4.59% (more payment certainty but higher rate and 5-year ERC tie-in, which Mr Patterson prefers to avoid given potential relocation in 3 years). Halifax tracker (lower initial rate but payment uncertainty incompatible with stated need for budgeting certainty).'},
  procurationFee:840,isDemo:true};
  state.cases.push(mc);await idbPut('cases',mc);
  state.ui.selectedClientId=clId;state.ui.selectedCaseId=csId;
