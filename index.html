@@ -1246,11 +1246,14 @@ function renderCases(v){
  v.innerHTML=`
  <div class="section-h"><h2>Cases</h2><div class="sub">${cs.length} total</div></div>
  <button class="btn primary" onclick="openModal('addcase')" style="margin-bottom:14px">+ Case</button>
- ${cs.length?`<table><thead><tr><th>Ref</th><th>Client</th><th>Type</th><th>Lender</th><th>Loan</th><th>Status</th></tr></thead><tbody>${
+ ${cs.length?`<table><thead><tr><th>Ref</th><th>Client</th><th>Type</th><th>Lender</th><th>Loan</th><th>Status</th><th>Awaited</th></tr></thead><tbody>${
  cs.map(c=>{const cl=state.clients.find(x=>x.id===c.clientId);
- return `<tr style="cursor:pointer" onclick="selectCase('${c.id}')"><td>${esc(c.ref||'—')}</td><td>${esc((cl?.firstName||cl?.name||''))} ${esc(cl?.lastName||'')}</td><td>${esc(c.type||'—')}</td><td>${esc(c.product?.lender||'—')}</td><td class="r">${c.loan?moneyP(c.loan.amount):'—'}</td><td><span class="tag ${c.status==='completed'?'green':c.status==='offered'?'amber':''}">${esc(c.status||'—')}</span></td></tr>`;}).join('')
+ return `<tr style="cursor:pointer" onclick="selectCase('${c.id}')"><td>${esc(c.ref||'—')}</td><td>${esc((cl?.firstName||cl?.name||''))} ${esc(cl?.lastName||'')}</td><td>${esc(c.type||'—')}</td><td>${esc(c.product?.lender||'—')}</td><td class="r">${c.loan?moneyP(c.loan.amount):'—'}</td><td><span class="tag ${c.status==='completed'?'green':c.status==='offered'?'amber':''}">${esc(c.status||'—')}</span></td><td onclick="event.stopPropagation()">${(c.awaitedDocuments||[]).map(a=>`<span class="tag" style="cursor:pointer" title="click to mark received" onclick="awaitedRemove('${c.id}','${esc(a.id)}')">${esc(a.title)} &times;</span>`).join(' ')||''}<button class="btn sm ghost" style="padding:1px 6px;font-size:10px" onclick="awaitedAdd('${c.id}')">+</button></td></tr>`;}).join('')
  }</tbody></table>`:'<div class="empty"><h3>No cases</h3><p>Cases sync from fallmortgage, or add one here for document generation.</p></div>'}`;
 }
+// documents-awaited register — the docsAwaited signal fallbrain derives from (a completed case waits on nothing)
+async function awaitedAdd(id){const c=state.cases.find(x=>x.id===id);if(!c)return;const t=prompt('Document awaited (e.g. proof of deposit, valuation report):');if(!t||!t.trim())return;c.awaitedDocuments=c.awaitedDocuments||[];c.awaitedDocuments.push({id:'aw_'+crypto.randomUUID().slice(0,8),title:t.trim(),addedAt:Date.now()});await idbPut('cases',c);render();toast('awaited document recorded');}
+async function awaitedRemove(id,aid){const c=state.cases.find(x=>x.id===id);if(!c||!Array.isArray(c.awaitedDocuments))return;c.awaitedDocuments=c.awaitedDocuments.filter(a=>a.id!==aid);await idbPut('cases',c);render();toast('marked received');}
 function selectCase(id){state.ui.selectedCaseId=id;state.active='generate';persistUI();render();}
 
 // ════════════════════════
