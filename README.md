@@ -74,4 +74,4 @@ BroadcastChannel `fall-mortgage` + `fall-client` + `fall-signal`. Syncs clients,
 
 ## Licence
 
-MIT · Simon Gant · part of the [sjgant80-hub](https://github.com/sjgant80-hub) sovereign estate · prime 877 · ◊·κ=1.
+MIT · Simon Gant · part of the [sjgant80-hub](https://github.com/sjgant80-hub) sovereign estate.
